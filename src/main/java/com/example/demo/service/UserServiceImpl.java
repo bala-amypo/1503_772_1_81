@@ -1,44 +1,53 @@
 package com.example.demo.service;
 
-import java.util.List;
-
+import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
+import com.example.demo.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
+import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    // Constructor Injection
-    public UserServiceImpl(UserRepository userRepository) {
+    // Constructor Injection (must follow logical order)
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public User register(User user) {
-
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already in use");
+    public User registerUser(User user) {
+        // Validate email uniqueness
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Email already in use");
         }
 
+        // Validate password length
         if (user.getPassword() == null || user.getPassword().length() < 8) {
-            throw new RuntimeException("Password must be at least 8 characters");
+            throw new ValidationException("Password must be at least 8 characters");
         }
 
-        if (user.getDepartment() == null || user.getDepartment().isBlank()) {
-            throw new RuntimeException("Department is required");
+        // Validate department
+        if (user.getDepartment() == null || user.getDepartment().isEmpty()) {
+            throw new ValidationException("Department is required");
         }
+
+        // Encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public User getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
     }
 
     @Override
@@ -47,26 +56,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @Override
-    public User updateDepartment(Long id, String department) {
-
-        if (department == null || department.isBlank()) {
-            throw new RuntimeException("Department cannot be empty");
-        }
-
-        User user = getUserById(id);
-        user.setDepartment(department);
-        return userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
+    public User loadUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
     }
 }
