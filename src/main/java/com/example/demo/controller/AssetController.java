@@ -12,32 +12,32 @@ public class AssetController {
 
     private final AssetService assetService;
 
-    // Constructor Injection (MANDATORY)
+    // Constructor Injection
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
     }
 
-    // Create Asset
+    // CREATE ASSET
     @PostMapping
     public Asset createAsset(@RequestBody Asset asset) {
         return assetService.createAsset(asset);
     }
 
-    // Get All Assets
+    // GET ALL ASSETS
     @GetMapping
     public List<Asset> getAllAssets() {
         return assetService.getAllAssets();
     }
 
-    // Get Asset by ID
+    // GET ASSET BY ID
     @GetMapping("/{id}")
-    public Asset getAssetById(@PathVariable Long id) {
+    public Asset getAsset(@PathVariable Long id) {
         return assetService.getAsset(id);
     }
 
-    // Update Asset Status
+    // UPDATE STATUS
     @PutMapping("/status/{id}")
-    public Asset updateAssetStatus(
+    public Asset updateStatus(
             @PathVariable Long id,
             @RequestBody Asset asset) {
         return assetService.updateStatus(id, asset.getStatus());
