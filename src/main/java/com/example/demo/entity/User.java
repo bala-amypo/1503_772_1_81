@@ -1,37 +1,34 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "users")
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String fullName;
+
+    @Column(unique = true)
     private String email;
-    private String role;
 
-    // Constructors
-    public User() {}
+    private String department;
 
-    public User(String name, String email, String role) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
+    private String role; // ADMIN / USER
+
+    private String password;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (role == null) role = "USER";
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
 }
