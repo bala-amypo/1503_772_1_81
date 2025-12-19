@@ -1,58 +1,46 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
+@Tag(name = "Users", description = "User management APIs")
 public class UserController {
 
     private final UserService userService;
 
-    // Constructor Injection
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // 🔹 Register new user
-    @PostMapping
-    public User registerUser(@RequestBody User user) {
-        return userService.register(user);
+    // Register new user
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody RegisterRequest request) {
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setDepartment(request.getDepartment());
+        user.setPassword(request.getPassword());
+        User createdUser = userService.registerUser(user);
+        return ResponseEntity.ok(createdUser);
     }
 
-    // 🔹 Get all users
+    // Get all users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // 🔹 Get user by ID
+    // Get user by ID
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
-
-    // 🔹 Get user by email
-    @GetMapping("/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
-    }
-
-    // 🔹 Update department
-    @PutMapping("/{id}/department")
-    public User updateDepartment(@PathVariable Long id,
-                                 @RequestParam String department) {
-        return userService.updateDepartment(id, department);
-    }
-
-    // 🔹 Delete user
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return "User deleted successfully";
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUser(id));
     }
 }
