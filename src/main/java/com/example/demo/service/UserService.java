@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
-
+import com.example.demo.repository.UserRepository;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
-public interface UserService {
-    User registerUser(User user);
-    User getUser(Long id);
-    List<User> getAllUsers();
-    User loadUserByEmail(String email);
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    public UserService(UserRepository userRepository) { this.userRepository = userRepository; }
+
+    public User createUser(User user) { return userRepository.save(user); }
+    public User getUser(Long id) { return userRepository.findById(id).orElse(null); }
+    public List<User> getAllUsers() { return userRepository.findAll(); }
 }
