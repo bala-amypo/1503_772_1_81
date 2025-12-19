@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -15,15 +15,23 @@ public class UserServiceImpl {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
+    @Override
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public User getUser(Long id) {
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

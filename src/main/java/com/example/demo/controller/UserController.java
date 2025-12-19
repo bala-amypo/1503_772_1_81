@@ -3,20 +3,37 @@ package com.example.demo.controller;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
-    private final UserService service;
-    public UserController(UserService service) { this.service = service; }
 
-    @PostMapping("/register")
-    public User createUser(@RequestBody User user) { return service.createUser(user); }
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping
+    public User addUser(@RequestBody User user) {
+        return userService.saveUser(user);
+    }
 
     @GetMapping
-    public List<User> getAllUsers() { return service.getAllUsers(); }
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) { return service.getUser(id); }
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return "User deleted with id " + id;
+    }
 }
