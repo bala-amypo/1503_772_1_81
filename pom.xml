@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>DigitalAssetLifecycle</name>
-    <description>Digital Asset Lifecycle & Audit Trail API</description>
+    <description>Digital Asset Lifecycle &amp; Audit Trail API</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -24,13 +24,13 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starter Web -->
+        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Boot Starter Data JPA -->
+        <!-- Spring Boot JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -57,12 +57,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
