@@ -1,5 +1,5 @@
 package com.example.demo.controller;
-
+import jakarta.validation.Valid;
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class AssetController {
 
     // CREATE ASSET
     @PostMapping
-    public Asset createAsset(@RequestBody Asset asset) {
+    public Asset createAsset(@Valid @RequestBody Asset asset) {
         return assetService.createAsset(asset);
     }
 
