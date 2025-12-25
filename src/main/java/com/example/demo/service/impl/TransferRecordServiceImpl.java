@@ -8,6 +8,7 @@ import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.TransferRecordRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.TransferRecordService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,45 +38,30 @@ public class TransferRecordServiceImpl implements TransferRecordService {
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        if (record.getFromDepartment() == null || record.getToDepartment() == null) {
-            throw new ValidationException("Departments are required");
+        User approver = userRepository.findById(record.getApprovedBy().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!"ADMIN".equalsIgnoreCase(approver.getRole())) {
+            throw new ValidationException("Approver must be ADMIN");
         }
 
         if (record.getFromDepartment().equals(record.getToDepartment())) {
-            throw new ValidationException("From and To departments must be different");
-        }
-
-        if (record.getTransferDate() == null) {
-            throw new ValidationException("Transfer date is required");
+            throw new ValidationException("Departments must differ");
         }
 
         if (record.getTransferDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Transfer date cannot be in the future");
         }
 
-        User approver = userRepository.findById(record.getApprovedBy().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
-
-        if (!"ADMIN".equalsIgnoreCase(approver.getRole())) {
-            throw new ValidationException("Transfer must be approved by ADMIN");
-        }
-
         record.setAsset(asset);
         record.setApprovedBy(approver);
-
-        asset.setStatus("TRANSFERRED");
-        assetRepository.save(asset);
 
         return transferRecordRepository.save(record);
     }
 
     @Override
     public List<TransferRecord> getTransfersForAsset(Long assetId) {
-
-        Asset asset = assetRepository.findById(assetId)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-
-        return transferRecordRepository.findByAsset(asset);
+        return transferRecordRepository.findByAssetId(assetId);
     }
 
     @Override

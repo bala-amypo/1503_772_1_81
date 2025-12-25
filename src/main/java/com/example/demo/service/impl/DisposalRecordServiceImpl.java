@@ -8,6 +8,7 @@ import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.DisposalRecordRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.DisposalRecordService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,33 +38,26 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        if (disposal.getDisposalMethod() == null || disposal.getDisposalMethod().isBlank()) {
-            throw new ValidationException("Disposal method is required");
-        }
+        User approver = userRepository.findById(disposal.getApprovedBy().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (disposal.getDisposalDate() == null) {
-            throw new ValidationException("Disposal date is required");
+        if (!"ADMIN".equalsIgnoreCase(approver.getRole())) {
+            throw new ValidationException("Approver must be ADMIN");
         }
 
         if (disposal.getDisposalDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Disposal date cannot be in the future");
         }
 
-        User approver = userRepository.findById(disposal.getApprovedBy().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
-
-        if (!"ADMIN".equalsIgnoreCase(approver.getRole())) {
-            throw new ValidationException("Disposal must be approved by ADMIN");
-        }
-
         disposal.setAsset(asset);
         disposal.setApprovedBy(approver);
 
-        // Auto update asset status
+        DisposalRecord saved = disposalRecordRepository.save(disposal);
+
         asset.setStatus("DISPOSED");
         assetRepository.save(asset);
 
-        return disposalRecordRepository.save(disposal);
+        return saved;
     }
 
     @Override
