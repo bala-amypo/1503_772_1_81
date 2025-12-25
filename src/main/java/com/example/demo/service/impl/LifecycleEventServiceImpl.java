@@ -20,12 +20,9 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
     private final AssetRepository assetRepository;
     private final UserRepository userRepository;
 
-    // REQUIRED constructor order
-    public LifecycleEventServiceImpl(
-            LifecycleEventRepository lifecycleEventRepository,
-            AssetRepository assetRepository,
-            UserRepository userRepository) {
-
+    public LifecycleEventServiceImpl(LifecycleEventRepository lifecycleEventRepository,
+                                     AssetRepository assetRepository,
+                                     UserRepository userRepository) {
         this.lifecycleEventRepository = lifecycleEventRepository;
         this.assetRepository = assetRepository;
         this.userRepository = userRepository;
@@ -33,7 +30,6 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
 
     @Override
     public LifecycleEvent logEvent(Long assetId, Long userId, LifecycleEvent event) {
-
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
@@ -43,20 +39,18 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
         if (event.getEventType() == null) {
             throw new ValidationException("Event type is required");
         }
-
         if (event.getEventDescription() == null || event.getEventDescription().isEmpty()) {
-            throw new ValidationException("Event description must not be empty");
+            throw new ValidationException("Event description is required");
         }
 
         event.setAsset(asset);
         event.setPerformedBy(user);
-
         return lifecycleEventRepository.save(event);
     }
 
     @Override
     public List<LifecycleEvent> getEventsForAsset(Long assetId) {
-        return lifecycleEventRepository.findByAssetId(assetId);
+        return lifecycleEventRepository.findByAsset_Id(assetId);
     }
 
     @Override
@@ -65,3 +59,4 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Lifecycle event not found"));
     }
 }
+
