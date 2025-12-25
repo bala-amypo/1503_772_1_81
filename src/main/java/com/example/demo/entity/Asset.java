@@ -15,17 +15,19 @@ public class Asset {
     @Column(nullable = false)
     private String assetName;
 
-    @Column(nullable = false)
-    private String assetType;
-
     @Column(nullable = false, unique = true)
-    private String serialNumber;
+    private String assetTag;
+
+    @Column(nullable = false)
+    private String category;
+
+    @Column(nullable = false)
+    private String status;
 
     @Column(nullable = false)
     private LocalDate purchaseDate;
 
-    @Column(nullable = false)
-    private String status;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "assigned_to")
@@ -41,39 +43,44 @@ public class Asset {
     public Asset(
             Long id,
             String assetName,
-            String assetType,
-            String serialNumber,
-            LocalDate purchaseDate,
+            String assetTag,
+            String category,
             String status,
+            LocalDate purchaseDate,
+            String description,
             User assignedTo,
             LocalDateTime createdAt
     ) {
         this.id = id;
         this.assetName = assetName;
-        this.assetType = assetType;
-        this.serialNumber = serialNumber;
-        this.purchaseDate = purchaseDate;
+        this.assetTag = assetTag;
+        this.category = category;
         this.status = status;
+        this.purchaseDate = purchaseDate;
+        this.description = description;
         this.assignedTo = assignedTo;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
     }
 
-    // ✅ OPTIONAL: Convenience constructor
+    // ✅ REQUIRED: Constructor WITHOUT id (used in tests)
     public Asset(
             String assetName,
-            String assetType,
-            String serialNumber,
-            LocalDate purchaseDate,
+            String assetTag,
+            String category,
             String status,
-            User assignedTo
+            LocalDate purchaseDate,
+            String description,
+            User assignedTo,
+            LocalDateTime createdAt
     ) {
         this.assetName = assetName;
-        this.assetType = assetType;
-        this.serialNumber = serialNumber;
-        this.purchaseDate = purchaseDate;
+        this.assetTag = assetTag;
+        this.category = category;
         this.status = status;
+        this.purchaseDate = purchaseDate;
+        this.description = description;
         this.assignedTo = assignedTo;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
     }
 
     // ================= GETTERS & SETTERS =================
@@ -95,20 +102,29 @@ public class Asset {
         this.assetName = assetName;
     }
 
-    public String getAssetType() {
-        return assetType;
+    public String getAssetTag() {
+        return assetTag;
     }
 
-    public void setAssetType(String assetType) {
-        this.assetType = assetType;
+    public void setAssetTag(String assetTag) {
+        this.assetTag = assetTag;
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
+    public String getCategory() {
+        return category;
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // 🔥 REQUIRED: Tests call setStatus(String)
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public LocalDate getPurchaseDate() {
@@ -119,13 +135,12 @@ public class Asset {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDescription() {
+        return description;
     }
 
-    // 🔥 REQUIRED: findByStatus() test usage
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getAssignedTo() {

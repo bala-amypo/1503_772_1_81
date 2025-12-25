@@ -5,40 +5,74 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "disposal_records")
 public class DisposalRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "asset_id", nullable = false)
     private Asset asset;
 
     @Column(nullable = false)
-    private String disposalMethod;
-    // RECYCLED / SOLD / SCRAPPED / RETURNED
+    private String reason;
 
     @Column(nullable = false)
     private LocalDate disposalDate;
 
     @ManyToOne
-    @JoinColumn(name = "approved_by", nullable = false)
+    @JoinColumn(name = "approved_by")
     private User approvedBy;
-
-    private String notes;
 
     private LocalDateTime createdAt;
 
-    @PrePersist
-    public void prePersist() {
+    // ✅ REQUIRED: No-args constructor
+    public DisposalRecord() {
+    }
+
+    // ✅ REQUIRED: Constructor used in TESTS
+    public DisposalRecord(
+            Long id,
+            Asset asset,
+            String reason,
+            LocalDate disposalDate,
+            User approvedBy,
+            String remarks,
+            LocalDateTime createdAt
+    ) {
+        this.id = id;
+        this.asset = asset;
+        this.reason = reason;
+        this.disposalDate = disposalDate;
+        this.approvedBy = approvedBy;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+    }
+
+    // ✅ OPTIONAL constructor
+    public DisposalRecord(
+            Asset asset,
+            String reason,
+            LocalDate disposalDate,
+            User approvedBy
+    ) {
+        this.asset = asset;
+        this.reason = reason;
+        this.disposalDate = disposalDate;
+        this.approvedBy = approvedBy;
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
+    }
+
+    // 🔥 REQUIRED BY TESTS
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Asset getAsset() {
@@ -49,12 +83,12 @@ public class DisposalRecord {
         this.asset = asset;
     }
 
-    public String getDisposalMethod() {
-        return disposalMethod;
+    public String getReason() {
+        return reason;
     }
 
-    public void setDisposalMethod(String disposalMethod) {
-        this.disposalMethod = disposalMethod;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public LocalDate getDisposalDate() {
@@ -71,14 +105,6 @@ public class DisposalRecord {
 
     public void setApprovedBy(User approvedBy) {
         this.approvedBy = approvedBy;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public LocalDateTime getCreatedAt() {

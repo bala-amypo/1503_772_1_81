@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "lifecycle_events")
 public class LifecycleEvent {
 
     @Id
@@ -15,27 +16,61 @@ public class LifecycleEvent {
     private Asset asset;
 
     @Column(nullable = false)
-    private String eventType; 
-    // ASSIGNED / RETURNED / REPAIRED / TRANSFERRED / DISPOSAL_REQUESTED / DISPOSED
+    private String eventType;
 
     @Column(nullable = false)
-    private String eventDescription;
+    private String description;
 
-    private LocalDateTime eventDate;
+    private LocalDateTime eventTime;
 
     @ManyToOne
-    @JoinColumn(name = "performed_by", nullable = false)
+    @JoinColumn(name = "performed_by")
     private User performedBy;
 
-    @PrePersist
-    public void prePersist() {
-        this.eventDate = LocalDateTime.now();
+    // ✅ REQUIRED: No-args constructor
+    public LifecycleEvent() {
     }
 
-    // Getters and Setters
+    // ✅ REQUIRED: Constructor used in TESTS
+    public LifecycleEvent(
+            Long id,
+            Asset asset,
+            String eventType,
+            String description,
+            LocalDateTime eventTime,
+            User performedBy
+    ) {
+        this.id = id;
+        this.asset = asset;
+        this.eventType = eventType;
+        this.description = description;
+        this.eventTime = eventTime != null ? eventTime : LocalDateTime.now();
+        this.performedBy = performedBy;
+    }
+
+    // ✅ OPTIONAL constructor
+    public LifecycleEvent(
+            Asset asset,
+            String eventType,
+            String description,
+            User performedBy
+    ) {
+        this.asset = asset;
+        this.eventType = eventType;
+        this.description = description;
+        this.eventTime = LocalDateTime.now();
+        this.performedBy = performedBy;
+    }
+
+    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
+    }
+
+    // 🔥 REQUIRED BY TESTS
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Asset getAsset() {
@@ -54,16 +89,16 @@ public class LifecycleEvent {
         this.eventType = eventType;
     }
 
-    public String getEventDescription() {
-        return eventDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDateTime getEventDate() {
-        return eventDate;
+    public LocalDateTime getEventTime() {
+        return eventTime;
     }
 
     public User getPerformedBy() {
