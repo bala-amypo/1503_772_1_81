@@ -1,12 +1,13 @@
-package com.example.demo.repository;
+package com.example.demo.service;
 
 import com.example.demo.entity.TransferRecord;
-import com.example.demo.entity.Asset;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 
-public interface TransferRecordRepository extends JpaRepository<TransferRecord, Long> {
+public interface TransferRecordService {
 
-    List<TransferRecord> findByAsset(Asset asset);
+    TransferRecord createTransfer(Long assetId, TransferRecord record);
+
+    List<TransferRecord> getTransfersForAsset(Long assetId);
+
+    TransferRecord getTransfer(Long id);
 }
