@@ -3,6 +3,8 @@ package com.example.demo.repository;
 import com.example.demo.entity.DisposalRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DisposalRecordRepository
-        extends JpaRepository<DisposalRecord, Long> {
+import java.util.List;
+
+public interface DisposalRecordRepository extends JpaRepository<DisposalRecord, Long> {
+    List<DisposalRecord> findByAssetId(Long assetId);
 }

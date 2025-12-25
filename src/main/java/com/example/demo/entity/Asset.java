@@ -12,53 +12,131 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String assetTag;
+    @Column(nullable = false)
+    private String assetName;
 
-    private String assetType; // LAPTOP / DESKTOP / PRINTER / NETWORK DEVICE / OTHER
+    @Column(nullable = false)
+    private String assetType;
 
-    private String model;
+    @Column(nullable = false, unique = true)
+    private String serialNumber;
 
+    @Column(nullable = false)
     private LocalDate purchaseDate;
 
-    private String status; // AVAILABLE / ASSIGNED / IN_REPAIR / TRANSFERRED / DISPOSED
+    @Column(nullable = false)
+    private String status;
 
     @ManyToOne
-    @JoinColumn(name = "current_holder_id")
-    private User currentHolder;
+    @JoinColumn(name = "assigned_to")
+    private User assignedTo;
 
     private LocalDateTime createdAt;
 
-    @PrePersist
-    public void prePersist() {
-        if (status == null) {
-            status = "AVAILABLE";
-        }
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
+    // ✅ REQUIRED: No-args constructor (JPA + Tests)
+    public Asset() {
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
+    // ✅ REQUIRED: Constructor used heavily in TESTS
+    public Asset(
+            Long id,
+            String assetName,
+            String assetType,
+            String serialNumber,
+            LocalDate purchaseDate,
+            String status,
+            User assignedTo,
+            LocalDateTime createdAt
+    ) {
+        this.id = id;
+        this.assetName = assetName;
+        this.assetType = assetType;
+        this.serialNumber = serialNumber;
+        this.purchaseDate = purchaseDate;
+        this.status = status;
+        this.assignedTo = assignedTo;
+        this.createdAt = createdAt;
+    }
 
-    public String getAssetTag() { return assetTag; }
-    public void setAssetTag(String assetTag) { this.assetTag = assetTag; }
+    // ✅ OPTIONAL: Convenience constructor
+    public Asset(
+            String assetName,
+            String assetType,
+            String serialNumber,
+            LocalDate purchaseDate,
+            String status,
+            User assignedTo
+    ) {
+        this.assetName = assetName;
+        this.assetType = assetType;
+        this.serialNumber = serialNumber;
+        this.purchaseDate = purchaseDate;
+        this.status = status;
+        this.assignedTo = assignedTo;
+        this.createdAt = LocalDateTime.now();
+    }
 
-    public String getAssetType() { return assetType; }
-    public void setAssetType(String assetType) { this.assetType = assetType; }
+    // ================= GETTERS & SETTERS =================
 
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public Long getId() {
+        return id;
+    }
 
-    public LocalDate getPurchaseDate() { return purchaseDate; }
-    public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
+    // 🔥 REQUIRED BY TESTS
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getAssetName() {
+        return assetName;
+    }
 
-    public User getCurrentHolder() { return currentHolder; }
-    public void setCurrentHolder(User currentHolder) { this.currentHolder = currentHolder; }
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(LocalDate purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    // 🔥 REQUIRED: findByStatus() test usage
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(User assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
