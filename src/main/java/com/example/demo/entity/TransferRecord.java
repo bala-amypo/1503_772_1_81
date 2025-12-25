@@ -18,19 +18,29 @@ public class TransferRecord {
     private LocalDate transferDate;
 
     @ManyToOne
-    private User transferredBy;
+    private User approvedBy;
 
     public TransferRecord() {}
 
     public TransferRecord(Long id, Asset asset, String fromDepartment,
-                          String toDepartment, LocalDate transferDate, User transferredBy) {
+                          String toDepartment, LocalDate transferDate,
+                          User approvedBy) {
         this.id = id;
         this.asset = asset;
         this.fromDepartment = fromDepartment;
         this.toDepartment = toDepartment;
         this.transferDate = transferDate;
-        this.transferredBy = transferredBy;
+        this.approvedBy = approvedBy;
     }
 
     public Asset getAsset() { return asset; }
+    public void setAsset(Asset asset) { this.asset = asset; }
+
+    public String getFromDepartment() { return fromDepartment; }
+    public String getToDepartment() { return toDepartment; }
+
+    public LocalDate getTransferDate() { return transferDate; }
+
+    public User getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(User approvedBy) { this.approvedBy = approvedBy; }
 }

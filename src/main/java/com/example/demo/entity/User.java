@@ -36,4 +36,12 @@ public class User {
     public String getPassword() { return password; }
     public String getDepartment() { return department; }
     public String getRole() { return role; }
+    public void setRole(String role) {
+    this.role = role;
+}
+
+public void setPassword(String password) {
+    this.password = password;
+}
+
 }
