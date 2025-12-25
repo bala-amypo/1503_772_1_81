@@ -1,5 +1,5 @@
 package com.example.demo.controller;
-import jakarta.validation.Valid;
+
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
 import org.springframework.web.bind.annotation.*;
@@ -12,34 +12,28 @@ public class AssetController {
 
     private final AssetService assetService;
 
-    // Constructor Injection
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
     }
 
-    // CREATE ASSET
     @PostMapping
-    public Asset createAsset(@Valid @RequestBody Asset asset) {
+    public Asset create(@RequestBody Asset asset) {
         return assetService.createAsset(asset);
     }
 
-    // GET ALL ASSETS
     @GetMapping
-    public List<Asset> getAllAssets() {
+    public List<Asset> getAll() {
         return assetService.getAllAssets();
     }
 
-    // GET ASSET BY ID
     @GetMapping("/{id}")
-    public Asset getAsset(@PathVariable Long id) {
+    public Asset getById(@PathVariable Long id) {
         return assetService.getAsset(id);
     }
 
-    // UPDATE STATUS
     @PutMapping("/status/{id}")
-    public Asset updateStatus(
-            @PathVariable Long id,
-            @RequestBody Asset asset) {
-        return assetService.updateStatus(id, asset.getStatus());
+    public Asset updateStatus(@PathVariable Long id,
+                              @RequestParam String status) {
+        return assetService.updateStatus(id, status);
     }
 }

@@ -16,25 +16,20 @@ public class LifecycleEventController {
         this.lifecycleEventService = lifecycleEventService;
     }
 
-    // POST /api/events?assetId=1&userId=2
-    @PostMapping
-    public LifecycleEvent logEvent(
-            @RequestParam Long assetId,
-            @RequestParam Long userId,
-            @RequestBody LifecycleEvent event) {
-
+    @PostMapping("/{assetId}/{userId}")
+    public LifecycleEvent log(@PathVariable Long assetId,
+                              @PathVariable Long userId,
+                              @RequestBody LifecycleEvent event) {
         return lifecycleEventService.logEvent(assetId, userId, event);
     }
 
-    // GET /api/events/asset/1
     @GetMapping("/asset/{assetId}")
-    public List<LifecycleEvent> getEventsByAsset(@PathVariable Long assetId) {
+    public List<LifecycleEvent> getByAsset(@PathVariable Long assetId) {
         return lifecycleEventService.getEventsForAsset(assetId);
     }
 
-    // GET /api/events/5
     @GetMapping("/{id}")
-    public LifecycleEvent getEvent(@PathVariable Long id) {
+    public LifecycleEvent getById(@PathVariable Long id) {
         return lifecycleEventService.getEvent(id);
     }
 }
