@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface LifecycleEventRepository extends JpaRepository<LifecycleEvent, Long> {
-    List<LifecycleEvent> findByAssetId(Long assetId);
+public interface LifecycleEventRepository
+        extends JpaRepository<LifecycleEvent, Long> {
+
+    List<LifecycleEvent> findByAsset_Id(Long assetId);
 }
 
