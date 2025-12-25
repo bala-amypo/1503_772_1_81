@@ -108,4 +108,11 @@ public class LifecycleEvent {
     public void setPerformedBy(User performedBy) {
         this.performedBy = performedBy;
     }
+    public String getEventDescription() {
+    return this.description;
+}
+
+public void setEventDescription(String eventDescription) {
+    this.description = eventDescription;
+}
 }
