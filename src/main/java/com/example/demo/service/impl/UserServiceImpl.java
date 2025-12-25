@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service   // ✅ THIS WAS MISSING
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // REQUIRED constructor order
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -25,21 +24,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
-
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already in use");
         }
-
         if (user.getPassword() == null || user.getPassword().length() < 8) {
             throw new ValidationException("Password must be at least 8 characters");
         }
-
         if (user.getDepartment() == null) {
             throw new ValidationException("Department is required");
-        }
-
-        if (user.getRole() == null) {
-            user.setRole("USER");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,3 +49,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 }
+
