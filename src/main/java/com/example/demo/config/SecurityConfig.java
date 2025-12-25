@@ -1,5 +1,6 @@
-package com.example.demo.security;
+package com.example.demo.config;
 
+import com.example.demo.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,17 +30,11 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-
-                // ✅ PUBLIC ENDPOINTS
                 .requestMatchers(
-                    "/",
                     "/auth/**",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html"
+                    "/v3/api-docs/**"
                 ).permitAll()
-
-                // 🔒 PROTECTED ENDPOINTS
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
