@@ -1,11 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
 import com.example.demo.entity.DisposalRecord;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DisposalRecordService {
-    DisposalRecord createDisposal(Long assetId, DisposalRecord disposal);
-    DisposalRecord getDisposal(Long id);
-    List<DisposalRecord> getAllDisposals();
+public interface DisposalRecordRepository
+        extends JpaRepository<DisposalRecord, Long> {
 }
-
