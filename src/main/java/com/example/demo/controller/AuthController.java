@@ -43,6 +43,15 @@ public class AuthController {
         user.setDepartment(request.getDepartment());
         user.setPassword(request.getPassword());
 
+        // 🔥 IMPORTANT FIX
+        // If role is provided (ADMIN), use it
+        // Else default to USER (so testcases do not fail)
+        if (request.getRole() != null && !request.getRole().isEmpty()) {
+            user.setRole(request.getRole().toUpperCase());
+        } else {
+            user.setRole("USER");
+        }
+
         User saved = userService.registerUser(user);
 
         UserResponse response = new UserResponse();
@@ -76,4 +85,3 @@ public class AuthController {
         return new LoginResponse(token);
     }
 }
-
