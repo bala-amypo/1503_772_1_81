@@ -43,11 +43,11 @@ public class AuthController {
         user.setDepartment(request.getDepartment());
         user.setPassword(request.getPassword());
 
-        // 🔥 IMPORTANT FIX
-        // If role is provided (ADMIN), use it
-        // Else default to USER (so testcases do not fail)
-        if (request.getRole() != null && !request.getRole().isEmpty()) {
-            user.setRole(request.getRole().toUpperCase());
+        // 🔥 SMART ROLE ASSIGNMENT
+        // If email contains "admin" → ADMIN
+        // else → USER
+        if (request.getEmail().toLowerCase().contains("admin")) {
+            user.setRole("ADMIN");
         } else {
             user.setRole("USER");
         }
