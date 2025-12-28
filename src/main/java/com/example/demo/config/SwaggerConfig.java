@@ -42,7 +42,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 // ✅ Server URL (already irundhadhe)
                 .servers(List.of(
-                        new Server().url("https://9027.pro604cr.amypo.ai/")
+                        new Server().url("https://9392.pro604cr.amypo.ai/")
                 ))
 
                 // ✅ GLOBAL SECURITY REQUIREMENT
