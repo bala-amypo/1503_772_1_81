@@ -28,11 +28,11 @@ public class LifecycleEvent {
     @JoinColumn(name = "performed_by", nullable = false)
     private User performedBy;
 
-    // ✅ No-arg constructor (required by JPA)
+    // No-arg constructor (required by JPA)
     public LifecycleEvent() {
     }
 
-    // ✅ All-args constructor
+    // All-args constructor
     public LifecycleEvent(Long id, Asset asset, String eventType,
                           String eventDescription, LocalDateTime eventDate,
                           User performedBy) {

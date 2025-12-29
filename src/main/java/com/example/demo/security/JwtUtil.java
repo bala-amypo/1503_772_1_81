@@ -15,7 +15,7 @@ public class JwtUtil {
 
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
 
-    // ✅ REQUIRED for JJWT 0.12.x (must be at least 256 bits)
+    // REQUIRED for JJWT 0.12.x (must be at least 256 bits)
     private static final SecretKey KEY =
             Keys.hmacShaKeyFor("my-super-secret-key-my-super-secret-key-123456".getBytes());
 
@@ -45,10 +45,10 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
 
-    // ✅ MUST return Jws<Claims> AND support getPayload()
+    // MUST return Jws<Claims> AND support getPayload()
     public Jws<Claims> parseToken(String token) {
         return Jwts.parser()
-                .verifyWith(KEY)       // ✅ JJWT 0.12.x API
+                .verifyWith(KEY)       //  JJWT 0.12.x API
                 .build()
                 .parseSignedClaims(token);
     }
