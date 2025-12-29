@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ✅ THIS WAS MISSING
+@Service   // THIS WAS MISSING
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
