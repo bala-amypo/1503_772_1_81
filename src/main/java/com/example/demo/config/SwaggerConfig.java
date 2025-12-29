@@ -40,17 +40,17 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
 
         return new OpenAPI()
-                // ✅ Server URL (already irundhadhe)
+                
                 .servers(List.of(
                         new Server().url("https://9392.pro604cr.amypo.ai/")
                 ))
 
-                // ✅ GLOBAL SECURITY REQUIREMENT
+                
                 .addSecurityItem(
                         new SecurityRequirement().addList("bearerAuth")
                 )
 
-                // ✅ SECURITY SCHEME DEFINITION
+                
                 .components(
                         new Components().addSecuritySchemes(
                                 "bearerAuth",

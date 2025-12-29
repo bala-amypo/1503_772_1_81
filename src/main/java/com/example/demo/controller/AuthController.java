@@ -43,7 +43,7 @@ public class AuthController {
         user.setDepartment(request.getDepartment());
         user.setPassword(request.getPassword());
 
-        // 🔥 SMART ROLE ASSIGNMENT
+        
         // If email contains "admin" → ADMIN
         // else → USER
         if (request.getEmail().toLowerCase().contains("admin")) {
